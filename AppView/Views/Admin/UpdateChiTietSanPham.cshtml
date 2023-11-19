@@ -1,0 +1,75 @@
+﻿@model AppData.ViewModels.SanPham.ChiTietSanPhamUpdateRequest
+
+@{
+    ViewData["Title"] = "AddAnhToMauSac";
+}
+
+<h1>AddAnhToMauSac</h1>
+
+<form asp-action="UpdateChiTietSanPham">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Tên màu sắc
+                </th>
+                <th>
+                    Mã màu sắc
+                </th>
+                <th>
+                    Kích cõ
+                </th>
+                <th>
+                    Số lượng
+                </th>
+                <th>
+                    Giá bán
+                </th>
+                <th>
+                    Mặc định
+                </th>
+                <th>
+                </th>
+                <th>
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(var i =0;i<Model.ChiTietSanPhams.Count;i++)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.ChiTietSanPhams[i].TenMauSac)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.ChiTietSanPhams[i].MaMau)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.ChiTietSanPhams[i].TenKichCo)
+                    </td>
+                    <td>
+                        <input type="number" asp-for="ChiTietSanPhams[i].SoLuong">
+                    </td>
+                    <td>
+                        <input type="number" asp-for="ChiTietSanPhams[i].GiaBan">
+                    </td>
+                    <td>
+                        <input type="radio" asp-for="TrangThai" value="@Model.ChiTietSanPhams[i].IDChiTietSanPham">
+                    </td>
+                    <td>
+                        <input type="hidden" asp-for="ChiTietSanPhams[i].IDChiTietSanPham">
+                    </td>
+                    <td>
+                        <input type="hidden" asp-for="ChiTietSanPhams[i].IDMauSac">
+                    </td>
+                    <td>
+                        <input type="hidden" asp-for="ChiTietSanPhams[i].IDKichCo">
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>

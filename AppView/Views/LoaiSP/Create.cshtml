@@ -1,0 +1,54 @@
+﻿@model AppData.Models.LoaiSP
+
+@{
+    Layout = "~/Views/Shared/_LayoutForAdmin.cshtml";
+    ViewData["Title"] = "Create";
+    AppData.Models.AssignmentDBContext dBContext = new AppData.Models.AssignmentDBContext();
+}
+
+<h1>Thêm Loại SP</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label  class="control-label">Tên Loại SP</label>
+                <input asp-for="Ten" class="form-control" />
+                <span asp-validation-for="Ten" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Tên Loại SP Cha</label>
+                <select class="form-control" name="IDLoaiSPCha">
+                    if (loaisp.IDLoaiSPCha == null)
+                    {
+                    <option value="">Chọn Sản Phẩm Cha</option>
+                    }
+                    @foreach (var cha in dBContext.LoaiSPs.ToList())
+                    {
+                        <option value="@cha.ID">@cha.Ten</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label  class="control-label">Trạng Thái</label>
+                <input asp-for="TrangThai" class="form-control" />
+                <span asp-validation-for="TrangThai" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Thêm Loại SP" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Show">Quay lại</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

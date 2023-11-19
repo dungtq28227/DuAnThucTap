@@ -1,0 +1,299 @@
+﻿@{
+}
+<div class="d-flex flex-row align-items-stretch" style="background:#e8eaed;">
+    <div class="d-flex flex-column me-2" style="width:330px;">
+        <div class="d-flex align-items-center p-3" style="height:80px">
+            <h3 class="heading-page">
+                <span><b>Hóa đơn</b></span>
+            </h3>
+        </div>
+        <!--Thời gian-->
+        <div class="container mt-2 fixed">
+            <div class="radiothoigian">
+                <span class="btn-text">Thời gian</span>
+                <div class="content">
+                    <input type="radio" name="rd" id="one">
+                    <input type="radio" name="rd" id="two">
+                    <label for="one" class="box first">
+                        <div class="plan">
+                            <span class="circle"></span>
+                            <span class="yearly">Tháng này</span>
+                        </div>
+                        <span class="price">100$/year</span>
+                    </label>
+                    <label for="two" class="box second">
+                        <div class="plan">
+                            <span class="circle"></span>
+                            <span class="yearly">Lựa chọn khác</span>
+                        </div>
+                        <span class="price">120$/year</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!--Lọc trạng thái-->
+        <div class="container mt-2 fixed">
+            <div class="select-btn" id="select-trangThai">
+                <span class="btn-text">Trạng thái</span>
+                <span class="arrow-dwn">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </span>
+            </div>
+            <ul class="list-items tt">
+                <li class="item">
+                    <span class="checkbox">
+                        <i class="fa-solid fa-check check-icon" data-value="2"></i>
+                    </span>
+                    <span class="item-text">Chờ xác nhận</span>
+                </li>
+                <li class="item">
+                    <span class="checkbox">
+                        <i class="fa-solid fa-check check-icon" data-value="3"></i>
+                    </span>
+                    <span class="item-text">Giao hàng</span>
+                </li>
+                <li class="item">
+                    <span class="checkbox">
+                        <i class="fa-solid fa-check check-icon" data-value="6"></i>
+                    </span>
+                    <span class="item-text">Thành công</span>
+                </li>
+                <li class="item">
+                    <span class="checkbox">
+                        <i class="fa-solid fa-check check-icon" data-value="7"></i>
+                    </span>
+                    <span class="item-text">Đơn hủy</span>
+                </li>
+                <li class="item">
+                    <span class="checkbox">
+                        <i class="fa-solid fa-check check-icon" data-value="4"></i>
+                    </span>
+                    <span class="item-text">Đang hoàn hàng</span>
+                </li>
+                <li class="item">
+                    <span class="checkbox">
+                        <i class="fa-solid fa-check check-icon" data-value="5"></i>
+                    </span>
+                    <span class="item-text">Hoàn hàng thành công</span>
+                </li>
+                <li class="item">
+                    <span class="checkbox">
+                        <i class="fa-solid fa-check check-icon" data-value="8"></i>
+                    </span>
+                    <span class="item-text">Hàng thất lạc</span>
+                </li>
+
+            </ul>
+        </div>
+        <!--Lọc kênh bán-->
+        <div class="container mt-2 fixed">
+            <div class="select-btn" id="select-kenh">
+                <span class="btn-text">Kênh bán</span>
+                <span class="arrow-dwn">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </span>
+            </div>
+            <ul class="list-items kb">
+                <li class="item">
+                    <span class="checkbox">
+                        <i class="fa-solid fa-check check-icon" data-value="1"></i>
+                    </span>
+                    <span class="item-text">Bán tại quầy</span>
+                </li>
+                <li class="item">
+                    <span class="checkbox">
+                        <i class="fa-solid fa-check check-icon" data-value="0"></i>
+                    </span>
+                    <span class="item-text">Website</span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <!--DANH SÁCH HÓA ĐƠN-->
+    <div class="d-flex flex-column p-3 flex-grow-1">
+
+        <div class="d-flex flex-row p-1 bg-white align-items-center">
+            <div class="d-flex ms-auto" style="justify-content:center">
+                <div class="mx-2" id="paginghd">
+                    <ul id="pagination-demo" class="pagination-sm"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column mt-2">
+            <table class="table table-bordered table-striped tbbills" align=center cellpadding=10>
+                <thead>
+                    <tr>
+                        <th scope="col">Mã hóa đơn</th>
+                        <th scope="col">Thời gian</th>
+                        <th scope="col">Khách hàng</th>
+                        <th scope="col">Khách trả</th>
+                        <th scope="col">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody id="billRecord">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="chitiethd" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết hóa đơn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body cthd-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+     var pageSizehd = 10; // Tối đa 10sp 1 trang
+     var pageIndexhd = 1;
+     var selectTT = $("#select-trangThai");
+     var selectKB = $("#select-kenh");
+     var itemtt = document.querySelectorAll('.tt .item');
+     var itemkb = document.querySelectorAll('.kb .item');
+
+     $(document).ready(function() {
+         loadBill();
+     });
+
+     // Drop down trạng thái
+     selectTT.toggleClass("open");
+     selectTT.on("click", function() {
+         $(this).toggleClass("open");
+     });
+     // Dropdown Kênh bán
+     selectKB.toggleClass("open");
+     selectKB.on("click", function() {
+         $(this).toggleClass("open");
+     });
+
+     itemtt.forEach(item =>{
+         item.addEventListener("click", () =>{
+             item.classList.toggle("checked");
+             Fillter();
+         })
+     })
+     itemkb.forEach(item =>{
+         item.addEventListener("click", () =>{
+             item.classList.toggle("checked");
+             Fillter();
+         })
+     })
+    function getCheckedValues(checkboxes) {
+       const checkedValues = [];
+       checkboxes.forEach(checkbox => {
+         if (checkbox.classList.contains('checked')) {
+           const icon = checkbox.querySelector('i');
+           const value = icon.getAttribute('data-value');
+           checkedValues.push(value);
+         }
+       });
+       return checkedValues;
+     }
+
+     function Fillter(){
+         let lsttt = getCheckedValues(itemtt);
+         let lstkb = getCheckedValues(itemkb);
+         var request = {loaiHD:lstkb, lstTT: lsttt, pageSize: 15, page:1};
+          $.ajax({
+             url: "/QuanLyHoaDon/LocHD",
+             type: "POST",
+             data: request ,
+             dataType: "json",
+             success: function(response) {
+                 $("#billRecord").empty();
+                 for (let i = 0; i < response.data.length; i++) {
+                      $("#billRecord").append(`
+                       <tr onclick="billDetail('${response.data[i].id}');">
+                           <th scope="row">${response.data[i].maHD}</th>
+                           <td>${response.data[i].thoiGian}</td>
+                           <td>${response.data[i].khachHang}</td>
+                           <td class="text-end">${response.data[i].khachTra.toLocaleString()}</td>
+                           <td>
+                               ${response.data[i].trangThai === 2 ? '<label class="badge bg-info">Chờ xác nhận</label>' :
+                               response.data[i].trangThai === 3 ? '<label class="badge bg-primary">Đang giao hàng</label>' :
+                               response.data[i].trangThai === 4 ? '<label class="badge bg-danger">Hoàn hàng</label>' :
+                               response.data[i].trangThai === 5 ? '<label class="badge bg-warning">Hoàn hàng thành công</label>' :
+                               response.data[i].trangThai === 6 ? '<label class="badge bg-success">Thành công</label>' :
+                               response.data[i].trangThai === 7 ? '<label class="badge bg-dark">Đơn hủy</label>' :
+                               '<label class="badge bg-secondary">Đơn hàng thất lạc</label>'}
+                           </td>
+                       </tr>
+                     `);
+                 }
+             },
+             error: function(err) {
+                 console.log('Error:', err);
+             }
+         });
+
+     }
+     // Load Danh sách hóa đơn
+     function loadBill() {
+         $.ajax({
+             url: "/QuanLyHoaDon/LoadAllHoaDon",
+             type: "GET",
+             data: {
+                 page: pageIndexhd,
+                 pagesize: pageSizehd
+             },
+             dataType: "json",
+             success: function(response) {
+                 $("#billRecord").empty();
+                 for (let i = 0; i < response.data.length; i++) {
+                     $("#billRecord").append(`
+                       <tr onclick="billDetail('${response.data[i].id}');">
+                           <th scope="row">${response.data[i].maHD}</th>
+                           <td>${response.data[i].thoiGian}</td>
+                           <td>${response.data[i].khachHang}</td>
+                           <td class="text-end">${response.data[i].khachTra.toLocaleString()}</td>
+                           <td>
+                               ${response.data[i].trangThai === 2 ? '<label class="badge bg-info">Chờ xác nhận</label>' :
+                               response.data[i].trangThai === 3 ? '<label class="badge bg-primary">Đang giao hàng</label>' :
+                               response.data[i].trangThai === 4 ? '<label class="badge bg-danger">Hoàn hàng</label>' :
+                               response.data[i].trangThai === 5 ? '<label class="badge bg-warning">Hoàn hàng thành công</label>' :
+                               response.data[i].trangThai === 6 ? '<label class="badge bg-success">Thành công</label>' :
+                               response.data[i].trangThai === 7 ? '<label class="badge bg-dark">Đơn hủy</label>' :
+                               '<label class="badge bg-secondary">Đơn hàng thất lạc</label>'}
+                           </td>
+                       </tr>
+                     `);
+                 }
+                 paginghd(response.total, function() {
+                     loadBill();
+                 });
+             },
+             error: function(err) {
+                 console.log('Error:', err);
+             }
+         });
+     }
+     //Hiển thị ChiTietHD
+     function billDetail(idhd){
+         $(".cthd-body").load("/QuanLyHoaDon/ViewChiTietHD/"+ idhd);
+         $("#chitiethd").modal("show");
+     }
+     // Phân trang
+     function paginghd(totalrow, callback) {
+         var totalpages = Math.ceil(totalrow / pageSizehd);
+         $("#paginghd").twbsPagination({
+             totalPages: totalpages,
+             visiblePages: 5,
+             onPageClick: function(event, page) {
+                 pageIndexhd = page;
+                 setTimeout(callback, 200);
+             }
+         });
+     }
+</script>

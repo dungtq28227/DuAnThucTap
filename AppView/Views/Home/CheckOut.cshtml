@@ -1,0 +1,318 @@
+﻿@using AppData.Models;
+@{
+    string tongtien = TempData.Peek("TongTien") as string;
+    long tienship = 0;
+    Layout = "_Layout";
+}
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Thanh toán</h4>
+                    <div class="breadcrumb__links">
+                        <a href="./index.html">Trang chủ</a>
+                        <a href="./shop.html">Cửa hàng</a>
+                        <span>Thanh toán</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        <div class="checkout__form">
+            <div class="row">
+                <div class="col-lg-8 col-md-6">
+                    <h6 class="coupon__code">
+                        <span class="icon_tag_alt"></span>Có phiếu giảm giá?<a href="#">
+                            Bấm vào đây
+                        </a> ể nhập mã của bạn
+                    </h6>
+                    <h6 class="checkout__title">Chi tiết thanh toán</h6>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="checkout__input">
+                                <label for="ten">Tên</label>
+                                <input type="text" class="form-control" id="name" placeholder="" value="" required="" style="height:38px">
+                                <div class="invalid-feedback"> Không để trống tên</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="checkout__input">
+                                <label for="sdt">SĐT</label>
+                                <input type="text" class="form-control" id="phone" placeholder="" value="" required="" style="height:38px">
+                                <div class="invalid-feedback"> Không để trống SDT </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="checkout__input">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control" id="email" placeholder="" value="" required="" style="height:38px">
+                                <div class="invalid-feedback"> Không để trống email </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="checkout__input">
+                                <label for="tinh">Tỉnh</label>
+                                <select class="custom-select d-block w-100" id="province" required="">
+                                </select>
+                                <div class="invalid-feedback"> Tên hợp lệ là bắt buộc. </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="checkout__input">
+                                <label for="huyen">Huyện</label>
+                                <select class="custom-select d-block w-100" id="district" required="">
+                                </select>
+                                <div class="invalid-feedback"> VTên hợp lệ là bắt buộc. </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="checkout__input">
+                                <label for="xa">Xã</label>
+                                <select class="custom-select d-block w-100" id="ward" required="">
+                                </select>
+                                <div class="invalid-feedback"> Tên hợp lệ là bắt buộc. </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="checkout__input">
+                                <label for="diachi">Địa chỉ</label>
+                                <input type="text" class="form-control" id="address" placeholder="" required="" style="height:38px">
+                                <div class="invalid-feedback"> Valid first name is required. </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="checkout__input">
+                    <p>Province<span>*</span></p>
+                    <select id="province"></select>
+                    </div>
+                    <div class="checkout__input">
+                    <p>District<span>*</span></p>
+                    <select id="district"></select>
+                    </div>
+                    <div class="checkout__input">
+                    <p>Ward<span>*</span></p>
+                    <select id="ward"></select>
+                    </div>
+                    <div class="checkout__input">
+                    <p>Services<span>*</span></p>
+                    <select id="service"></select>
+                    </div>*@
+                    <div class="checkout__input__checkbox">
+                        <p>
+                            Tạo một tài khoản bằng cách nhập thông tin dưới đây. Nếu bạn là khách hàng cũ Vui lòng đăng nhập ở đầu trang.
+                        </p>
+                    </div>
+                    @*<div class="checkout__input">
+                    <p>Account Password<span>*</span></p>
+                    <input type="text">
+                    </div>*@
+                    @*<div class="checkout__input__checkbox">
+                    <label for="diff-acc">
+                    Note about your order, e.g, special noe for delivery
+                    <input type="checkbox" id="diff-acc">
+                    <span class="checkmark"></span>
+                    </label>
+                    </div>
+                    <div class="checkout__input">
+                    <p>Order notes<span>*</span></p>
+                    <input type="text"
+                    placeholder="Notes about your order, e.g. special notes for delivery.">
+                    </div>*@
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="checkout__order">
+                        <h4 class="order__title">Đơn hàng của bạn</h4>
+                        @* <div class="checkout__order__products">Product <span>Total</span></div>
+                        <ul class="checkout__total__products">
+                        <li>01. Vanilla salted caramel <span>$ 300.0</span></li>
+                        <li>02. German chocolate <span>$ 170.0</span></li>
+                        <li>03. Sweet autumn <span>$ 170.0</span></li>
+                        <li>04. Cluten free mini dozen <span>$ 110.0</span></li>
+                        </ul>*@
+                        <ul class="checkout__order__products">
+                            @*								<li>Subtotal <span>@tongtien.ToString("n0") VNĐ</span></li>
+                            *@
+                            <li>Fee <span id="fee">@tienship.ToString("n0") VNĐ</span></li>
+                            <li>Total <span id="total">@tongtien VNĐ</span></li>
+                        </ul>
+                        @*<div class="checkout__input__checkbox">
+                        <label for="acc-or">
+                        Create an account?
+                        <input type="checkbox" id="acc-or">
+                        <span class="checkmark"></span>
+                        </label>
+                        </div>*@
+                        @*<div class="checkout__input__checkbox">
+                        <label for="payment">
+                        Check Payment
+                        <input type="checkbox" id="payment">
+                        <span class="checkmark"></span>
+                        </label>
+                        </div>
+                        <div class="checkout__input__checkbox">
+                        <label for="paypal">
+                        Paypal
+                        <input type="checkbox" id="paypal">
+                        <span class="checkmark"></span>
+                        </label>
+                        </div>*@
+                        <button onclick="createhoadon()" class="site-btn">
+                            ĐẶT HÀNG
+                        </button>
+                        <a class="site-btn" asp-action="Pay" asp-controller="Home" style="text-align:center">
+                            THANH TOÁN
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="~/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+    var tienShip = 0;
+    var tinh = "";
+    var huyen = "";
+    var xa = "";
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "https://online-gateway.ghn.vn/shiip/public-api/master-data/province",
+            headers: { token: '9f4e42e4-fde8-11ed-a281-3aa62a37e0a5' },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                for (var i = 0; i < data.data.length; i++) {
+                    var rows = "<option id='" + data.data[i].ProvinceID + "' value='" + data.data[i].ProvinceID + "'>" + data.data[i].ProvinceName + "</option>";
+                    $('#province').append(rows);
+                }
+            },
+            error: function (reponse) {
+                alert(reponse.responseText);
+            }
+        });
+        $("#province").change(function () {
+            var value = document.getElementById("province").value;
+            tinh = document.getElementById(value).innerHTML;
+            $.ajax({
+                type: "GET",
+                url: "https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" + value,
+                headers: { token: '9f4e42e4-fde8-11ed-a281-3aa62a37e0a5' },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    for (var i = 0; i < data.data.length; i++) {
+                        var rows = "<option id='" + data.data[i].DistrictID + "' value='" + data.data[i].DistrictID + "'>" + data.data[i].DistrictName + "</option>";
+                        $('#district').append(rows);
+                    }
+                },
+                error: function (reponse) {
+                    alert(reponse.responseText);
+                }
+            });
+        });
+        $("#district").change(function () {
+            var value = document.getElementById("district").value;
+            huyen = document.getElementById(value).innerHTML;
+            $.ajax({
+                type: "GET",
+                url: "https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" + value,
+                headers: { token: '9f4e42e4-fde8-11ed-a281-3aa62a37e0a5' },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    for (var i = 0; i < data.data.length; i++) {
+                        var rows = "<option id='" + data.data[i].WardCode + "' value='" + data.data[i].WardCode + "'>" + data.data[i].WardName + "</option>";
+                        $('#ward').append(rows);
+                    }
+                },
+                error: function (reponse) {
+                    alert(reponse.responseText);
+                }
+            });
+            $.ajax({
+                type: "GET",
+                url: "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/available-services?shop_id=4228407&from_district=1542&to_district=" + value,
+                headers: { token: '9f4e42e4-fde8-11ed-a281-3aa62a37e0a5' },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    for (var i = 0; i < data.data.length; i++) {
+                        var rows = "<option value='" + data.data[i].service_id + "'>" + data.data[i].short_name + "</option>";
+                        $('#service').append(rows);
+                    }
+                },
+                error: function (reponse) {
+                    alert(reponse.responseText);
+                }
+            });
+        });
+        $("#ward").change(function () {
+            var value1 = document.getElementById("ward").value;
+            var value2 = document.getElementById("district").value;
+            xa = document.getElementById(value1).innerHTML;
+            $.ajax({
+                type: "GET",
+                url: "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee?shop_id=4643378?to_ward_code=" + value1 + "&to_district_id=" + value2 + "&weight=100&service_type_id=2",
+                headers: { token: '9f4e42e4-fde8-11ed-a281-3aa62a37e0a5' },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    tienShip = data.data.total;
+                    document.getElementById("fee").innerHTML = data.data.total + " VNĐ";
+                    //document.getElementById("total").innerHTML = data.data.total + tongtien + " VNĐ";
+                    // document.getElementById("diachi").value = strProvince + ", " + strDistrict + ", " + strProvince;
+                },
+                error: function (reponse) {
+                    alert(reponse.responseText);
+                }
+            });
+        });
+    });
+    function createhoadon() {
+        var ten = $("#name").val();
+        var email = $("#email").val();
+        var sdt = $("#phone").val();
+        var diaChi = $("#address").val();
+        var objHoaDon = { Ten: ten, Email: email, SDT: sdt, DiaChi: diaChi + ", " + xa + ", " + huyen + ", " + tinh, TienShip: tienShip };
+        $.ajax({
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Home/Order',
+            data: objHoaDon,
+            success: function (response) {
+                debugger;
+                Swal.fire(
+                    {
+                        title: response.message,
+                        icon: "success"
+                    }
+                );
+            },
+            error: function () {
+                Swal.fire(
+                    {
+                        title: "Error",
+                        icon: "error"
+                    }
+                )
+            }
+        });
+    }
+</script>
+
+<!-- Checkout Section End -->

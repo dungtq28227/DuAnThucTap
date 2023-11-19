@@ -1,0 +1,74 @@
+﻿@model AppData.ViewModels.KhachHangViewModel
+@{
+    Layout = "_Layout";
+}
+<div class="row" style="margin-top:10px">
+    <div class=col-4></div>
+    <div class="col-4">
+        <!-- Pills navs -->
+        <h3 style="text-align:center;margin-bottom:10px"><strong>REGISTER</strong></h3>
+        <!-- Pills navs -->
+        <!-- Pills content -->
+        <div class="tab-content" style="border-radius: 1rem;">
+            <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+                <form method="post" onsubmit="register(event)" id="registerForm">
+                    <div class="form-outline mb-4">
+                        <label class="form-label">Name</label>
+                        <input asp-for="Name" type="text" id="name" class="form-control" />
+                    </div>
+                    <!-- Email input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label">Email address</label>
+                        <input asp-for="Email" type="email" id="email" class="form-control" />
+                    </div>
+
+                    <!-- Password input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label">Password</label>
+                        <input asp-for="Password" type="password" id="password" class="form-control" />
+                    </div>
+                    <!-- Password input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" id="confirm" class="form-control" />
+                    </div>
+                    <!-- Submit button -->
+                    <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+                    <!-- Register buttons -->
+                    <div class="text-center">
+                        <p>Have an account?<a asp-action="Login"> Go to Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class=col-4></div>
+    </div>
+</div>
+<script>
+    function register(e)
+    {
+        e.preventDefault();
+        var password = $("#password").val();
+        console.log(password);
+        var confirm = $("#confirm").val();
+        console.log(confirm);
+        if (password == confirm) {
+            Swal.fire({
+                title: "Đăng ký thành công",
+                icon: "success",
+                confirmButtonText: "Đến trang Login"
+            }).then(result => {
+                if(result.isConfirmed){
+                    const registerForm = document.getElementById('registerForm');
+                    registerForm.submit();
+                }
+            });
+        }
+        else{
+            Swal.fire({
+                title: "Đăng ký thất bại",
+                icon: "error"
+            });
+        }
+    }
+</script>

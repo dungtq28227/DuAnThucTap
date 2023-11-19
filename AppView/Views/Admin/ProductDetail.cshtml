@@ -1,0 +1,71 @@
+﻿@model IEnumerable<AppData.ViewModels.SanPham.ChiTietSanPhamViewModelAdmin>
+
+@{
+    ViewData["Title"] = "ProductDetail";
+    string idSanPham = TempData["IDSanPham"] as string;
+}
+
+<h1>ProductDetail</h1>
+
+<p>
+    <a asp-action="AddChiTietSanPham" asp-route-idSanPham="@idSanPham">Create New</a>
+</p>
+<form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.MaMauSac)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TenKichCo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SoLuong)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.GiaBan)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NgayTao)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TenKhuyenMai)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MaMauSac)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TenKichCo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SoLuong)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GiaBan)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NgayTao)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TenKhuyenMai)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="submit"></button>
+</form>
+

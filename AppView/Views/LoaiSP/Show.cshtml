@@ -1,0 +1,108 @@
+﻿@model AppView.PhanTrang.PhanTrangLoaiSP
+
+@{
+    Layout = "~/Views/Shared/_LayoutForAdmin.cshtml";
+    ViewData["Title"] = "Show";
+    AppData.Models.AssignmentDBContext dBContext = new AppData.Models.AssignmentDBContext();
+    int stt = 1;
+}
+
+<h1>Danh sách loại Sản Phẩm</h1>
+
+<button class="btn btn-dark">
+    <strong style="color:white">@Html.ActionLink("Thêm Loại Sản Phẩm", "Create")</strong>
+</button>
+<br />
+<form asp-action="TimKiemLoaiSPTheoTen" asp-controller="LoaiSP" method="get" enctype="multipart/form-data">
+    <div class="input-group">
+        <input type="text" name="Ten" class="form-control" placeholder="Search for Product Type">
+        <div class="input-group-append">
+            <span class="input-group-text bg-transparent text-primary">
+                <button type="submit" class="fa fa-search"></button>
+            </span>
+        </div>
+    </div>
+</form>
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               STT
+            </th>
+            <th>
+               Tên
+            </th>
+            <th>
+                Loại SP Cha
+            </th>
+            <th>
+                Trạng Thái 
+            </th>
+           
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.listlsp) {
+        <tr>
+            <td>
+                <strong style="color:black">@stt</strong>
+            </td>
+            <td>
+               <strong style="color:red">@item.Ten</strong>
+            </td>
+                <td>
+                    @{
+                        var vai = dBContext.LoaiSPs.Find(item.IDLoaiSPCha);
+                        if (vai != null)
+                        {
+                            <strong style="color:green">@vai.Ten</strong>
+                        }
+                        else
+                        {
+                            <strong></strong>
+                        }
+
+                    }
+                </td>
+            <td>
+                @if(item.TrangThai==0){
+                    <strong style="color:red">Hết Hàng</strong>
+                }
+                else{
+                        <strong style="color:green">Còn Hàng</strong>
+                }
+            </td>
+           
+            <td>
+                    <button class="btn btn-success">
+                        @Html.ActionLink("Sửa", "Edit", new { id = item.ID }, new { @style = "color:white;" })
+                    </button>
+                    <button class="btn btn-primary">
+                        @Html.ActionLink("Chi tiết", "Details", new { id = item.ID }, new { @style = "color:white;" })
+                    </button>
+                   
+            </td>
+            @{
+                stt++;
+            }
+        </tr>
+}
+    </tbody>
+</table>
+<div class="col-12">
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled"><a class="page-link" href="#">Previous</span></a></li>
+            @for (int i = 1; i <= Model.PagingInfo.TotalPages; i++)
+            {
+                <li class="page-item"><a class="page-link" href="/LoaiSP/Show?ProductPage=@i">@i</a></li>
+
+            }
+
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+</div>

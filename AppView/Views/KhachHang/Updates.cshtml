@@ -1,0 +1,100 @@
+﻿@model AppData.ViewModels.KhachHangView
+
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Views/Shared/_LayoutForAdmin.cshtml";
+}
+
+<h1>Sửa Thông Tin Khách Hàng</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Update">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" hidden>
+                <label class="control-label">Id KH</label>
+                <input asp-for="IDKhachHang" class="form-control" />
+                <span asp-validation-for="IDKhachHang" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Tên Khách Hàng</label>
+                <input asp-for="Ten" class="form-control" />
+                <span asp-validation-for="Ten" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Mật Khẩu</label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group">
+                <label class="control-label">Giới Tính</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gioiTinh" value="1" @(Model.GioiTinh == 1 ? "checked" : "")>
+                    <label class="form-check-label" for="flexRadioDefault1">
+                        Nam
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gioiTinh" value="0" @(Model.GioiTinh == 0 ? "checked" : "")>
+                    <label class="form-check-label" for="flexRadioDefault2">
+                        Nữ
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Ngày Sinh</label>
+                <input asp-for="NgaySinh" class="form-control" />
+                <span asp-validation-for="NgaySinh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Email</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Địa Chỉ</label>
+                <input asp-for="DiaChi" class="form-control" />
+                <span asp-validation-for="DiaChi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Số Điện Thoại</label>
+                <input asp-for="SDT" class="form-control" />
+                <span asp-validation-for="SDT" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Điểm Tích</label>
+                <input asp-for="DiemTich" class="form-control" />
+                <span asp-validation-for="DiemTich" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Trạng Thái </label>
+                <input asp-for="TrangThai" class="form-control" />
+                <span asp-validation-for="TrangThai" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Sửa Khách Hàng" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="GetAllKhachHang">Quay lại</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+    <script>
+        // JavaScript để quản lý trạng thái của radio buttons
+        document.addEventListener("DOMContentLoaded", function () {
+            var gioiTinh = @Model.GioiTinh;
+
+            document.querySelector('input[name="gioiTinh"][value="' + gioiTinh + '"]').checked = true;
+        });
+    </script>
+

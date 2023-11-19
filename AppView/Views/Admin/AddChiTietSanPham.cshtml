@@ -1,0 +1,98 @@
+﻿@model AppData.ViewModels.SanPham.ChiTietSanPhamUpdateRequest
+
+@{
+    ViewData["Title"] = "Thêm số lượng và giá bán cho chi tiết sản phẩm";
+}
+
+<h1>AddChiTietSanPham</h1>
+
+<h4>ChiTietSanPhamRequest</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddChiTietSanPham">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>            
+            <div class="form-group" id="mauSac">
+                <table id="tbmausac">
+                    <thead>
+                        <tr>
+                            <td>Tên màu</td>
+                            <td>Mã màu</td>
+                        </tr>
+                    </thead>
+                    <tbody class="table" id="tbbody">
+                        <tr>
+                            <td>
+@*                                 <input asp-for="MauSacs[0].Ten" class="form-control" />
+ *@                            </td>
+                            <td>
+@*                                 <input asp-for="MauSacs[0].Ma" type="color" class="form-control" list="lstMauSac" />
+ *@                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <datalist id="lstMauSac"></datalist>
+            <div class="form-group">
+                <input type="button" id="addMauSac" value="Thêm màu sắc" class="btn btn-primary" />
+            </div>
+            <div class="form-group" id="kichCo">
+                <label class="control-label">Kích Cỡ</label>
+@*                 <input asp-for="KichCos[0]" class="form-control" list="lstKichCo"/>
+ *@            </div>
+            <datalist id="lstKichCo"></datalist>
+            <div class="form-group">
+                <input type="button" id="addKichCo" value="Thêm kích cỡ" class="btn btn-primary" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script src="~/js/jquery-3.3.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "/Admin/GetAllMauSac",
+            success: function (response) {
+                for (var i = 0; i < response.length; i++) {
+                    var rows = "<option value='" + response[i].ma + "'>" + response[i].ma + "</option>";
+                    $('#lstMauSac').append(rows);
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "/Admin/GetAllKichCo",
+            success: function (response) {
+                for (var i = 0; i < response.length; i++) {
+                    var rows = "<option value='" + response[i].ten + "'>" + response[i].ten + "</option>";
+                    $('#lstKichCo').append(rows);
+                }
+            }
+        });
+    });
+
+    $("#addMauSac").click(function () { 
+        var count = $("#tbbody > tr").length;
+        $("#tbbody").append("<tr><td> <input name='MauSacs[" + count + "].Ten' class='form-control'/></td><td><input name='MauSacs[" + count + "].Ma' type='color' class='form-control' list='lstMauSac'/></td></tr>");
+        console.log("<tr><td> <input name='MauSacs[" + count + "].Ten' class='form-control'/></td><td><input name='MauSacs[" + count + "].Ma' type='color' class='form-control' list='lstMauSac'/></td></tr>");
+    });
+
+    $("#addKichCo").click(function () { 
+        var count = $("#kichCo > input").length;
+        $("#kichCo").append("<input name='KichCos[" + count + "]' class='form-control' ' list='lstKichCo'/>");
+    });
+</script>

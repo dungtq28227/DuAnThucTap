@@ -1,0 +1,72 @@
+﻿@using AppData.ViewModels;
+@{
+    Layout = "_Layout";
+}
+
+<div class="row" style="margin-top:10px">
+    <div class=col-4></div>
+    <div class="col-4">
+        <h3 style="text-align:center;margin-bottom:10px"><strong>LOGIN</strong></h3>
+        <div class="tab-content">
+            <div>
+                <form method="post">
+                    <!-- Email input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label">Email address hoặc SĐT</label>
+                        <input type="text" name="login" class="form-control" />
+@*                        <span class="text-danger"></span>
+*@                    </div>
+
+                    <!-- Password input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" />
+@*                        <span asp-validation-for="Password" class="text-danger"></span>
+*@                    </div>
+
+                    <!-- 2 column grid layout -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 d-flex justify-content-center">
+                            <!-- Checkbox -->
+                            <div class="form-check mb-3 mb-md-0">
+                                <input class="form-check-input" type="checkbox" value="" id="loginCheck" checked />
+                                <label class="form-check-label" for="loginCheck"> Remember me </label>
+                            </div>
+                        </div>
+
+                        <div id="forgotPasswordDiv" class="col-md-6 d-flex justify-content-center">
+                            <!-- Simple link -->
+                            <a href="ForgotPassword">Forgot password?</a>
+                        </div>
+                    </div>
+
+                    <!-- Submit button -->
+                    <button type="submit" class="btn btn-primary btn-block mb-4">Login</button>
+                    <!-- Register buttons -->
+                    <div class="text-center">
+                        <p>Not a member? <a asp-controller="Home" asp-action="Register">Register now!</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class=col-4></div>
+    </div>
+</div>
+<script>
+    function showForgotPasswordForm() {
+        var csrfToken = $('input[name="__RequestVerificationToken"]').val();
+        $.ajax({
+            url: '@Url.Action("ForgotPassword", "Home")',
+            type: 'POST',
+            headers: {
+                'RequestVerificationToken': csrfToken
+            },
+            success: function (result) {
+                $('#forgotPasswordDiv').empty().html(result);
+            },
+            error: function () {
+                alert('An error occurred while loading the form.');
+            }
+        });
+    }
+</script>

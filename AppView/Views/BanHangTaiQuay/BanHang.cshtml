@@ -1,0 +1,363 @@
+﻿@using AppData.Models
+@using AppData.ViewModels
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "BanHang";
+    <script src="~/Admin/js/bantaiquay.js" defer></script>
+    var lsthdcho = ViewData["lsthdcho"] as List<HoaDon>;
+    // var lstPttt = ViewData["lstPttt"] as List<PhuongThucThanhToan>;
+
+    var loginInfor = new LoginViewModel();
+    string? session = Context.Session.GetString("LoginInfor");
+    if (session != null)
+    {
+        loginInfor = JsonConvert.DeserializeObject<LoginViewModel>(Context.Session.GetString("LoginInfor"));
+    }
+}
+
+<div class="d-flex flex-row align-items-stretch" style="background: #f0f1f3">
+    <!--Hiển thị giỏ hàng-->
+    <div class="d-flex flex-column align-items-stretch flex-grow-1">
+        <div class="d-flex flex-row bg-primary text-white w-100 flex-shrink-1" style="background:#5372F0;height:50px;">
+            <!--Hiển thị danh sách hóa đơn chờ-->
+            <div class="tabbill">
+                <div class="icon me-auto"><i id="left" class="fa-solid fa-angle-left"></i></div>
+                @if (lsthdcho != null)
+                {
+                    <ul class="tabs-box">
+                        @{
+                            var index = 1;
+                            foreach (var item in lsthdcho)
+                            {
+                                <li class="tab" onclick="gethdct('@item.ID')">
+                                    <span value="@item.ID">
+                                        <a>Hoá đơn @index</a>
+                                        <a style="padding-left: 10px;" onclick="deleteHDCho('@item.ID')"><i class="fas fa-times"></i></a>
+                                    </span>
+                                </li>
+                                index++;
+                            }
+                        }
+                    </ul>
+                }
+                <div class="icon ms-auto"><i id="right" class="fa-solid fa-angle-right"></i></div>
+            </div>
+            <!--Tạo mới-->
+            <div class="ms-auto align-content-center">
+                <div class="btn-create d-flex align-items-center">
+                    <button type="button" onclick="addHDCho()" class="btn btn-primary d-flex align-items-center ms-auto" title="Thêm mới">
+                        <i class="bi bi-plus-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!--Hiển thị hóa đơn chi tiết-->
+        <div class="d-flex flex-column p-2 mx-3 mt-3 border-0 rounded-3 flex-grow-1 bg-white" style="height:640px;">
+            <div class="d-flex flex-column p-2">
+                <div id="partialGioHang">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Sản phẩm-->
+    <div class="d-flex flex-column align-items-stretch">
+        <!--Tìm kiếm sản phẩm-->
+        <div class="d-flex flex-column bg-primary text-white w-100" style="height:50px;">
+            <div class="d-flex justify-content-start">
+                <div class="search-product d-flex align-items-center">
+                    <div class="search-bar">
+                        <form class="search-form d-flex align-items-center">
+                            <input type="text" name="query" placeholder="Tìm kiếm sản phẩm" title="Enter search keyword">
+                            <button type="submit" title="Tìm kiếm"><i class="bi bi-search"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Hiển thị sản phẩm-->
+        <div class="d-flex flex-column p-2  mt-3 border-0 rounded-3 bg-white" style="height:640px">
+            <ul class="product-list">
+            </ul>
+            <div class="d-flex flex-row bg-light mt-auto" style="justify-content:center">
+                <div class="mx-2" id="pagingsp">
+                    <ul id="pagination-demo" class="pagination-sm"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--MODEL-->
+<!--Model thanh toán -->
+<div class="modal border-0 rounded-0" id="thanhtoan" tabindex="-1">
+    <div class="modal-dialog" id="modalthanhtoan">
+        <div class="modal-content" id="modalthanhtoan-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title fw-700 text-white align-center">THANH TOÁN </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="thanhtoanbody">
+            </div>
+        </div>
+    </div>
+</div>
+<!--Model sản phẩm-->
+<div class="modal border-0 rounded-0" id="sanpham" tabindex="-1">
+    <div class="modal-dialog" id="modalsanpham">
+        <div class="modal-content" id="modalsanpham-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title fw-700 text-white align-center">Chi tiết sản phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="sanphambody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bỏ qua</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    var pageSizesp = 10;// Tối đa 10sp 1 trang
+    var pageIndexsp = 1;//Trang ban đầu
+    $(document).ready(function() {
+        loadsp();
+        activeTab(0);
+        $(function () {
+          $(document).on("click", ".tab", function (e) {
+            e.preventDefault();
+            $(".tab").removeClass("active");
+            $(this).addClass("active");
+          });
+        });
+    })
+    //TabActive
+    function activeTab(index){
+        var allTabs = $(".tabs-box .tab");
+        if(allTabs.length !== 0 && index == 0){
+            var tab = allTabs.first();
+            var elementValue = tab.find("span").attr("value");
+            gethdct(elementValue);
+            tab.addClass("active");
+        }else if(index == 1){
+            var tab = allTabs.last();
+            var elementValue = tab.find("span").attr("value");
+            gethdct(elementValue);
+            tab.addClass("active");
+        }
+    }
+
+    //LoadDSSanPham
+       function loadsp() {
+            $.ajax({
+                url: "/BanHangTaiQuay/LoadSp",
+                type: "GET",
+                data:{
+                page: pageIndexsp,
+                pagesize:pageSizesp,
+                },
+                dataType: "json",
+                success: function(response) {
+                    $(".product-list").empty();
+                    for (let i = 0; i < response.data.length; i++) {
+                        $(".product-list").append(`
+                                                    <li class="product-item d-flex flex-row" onclick="showSPDetail('${response.data[i].id}')">
+                                                            <div class="product-img">
+                                                                <img src="/img/product/${response.data[i].anh}" class="img-fluid rounded-start" alt="...">
+                                                            </div>
+                                                            <div class="product-detail d-flex flex-column flex-grow-1">
+                                                                <span class="product-name mt-1">${response.data[i].ten}</span>
+                                                                <div class="product-infor mt-auto">
+                                                                    <span style="flex-basis:100%"><b style="color:blue;font-size:14px; font-weight:700">${response.data[i].giaBan.toLocaleString()}</b></span>
+
+                                                                </div>
+                                                            </div>
+                                                    </li>
+                                                    `);
+                    }
+                    pagingsp(response.total, function(){
+                            loadsp();
+                    });
+                },
+                error: function(err) {
+                    console.log('Error:', err);
+                }
+            });
+        }
+    //Phân trang sp
+    function pagingsp(totalrow, callback){
+        var totalgages = Math.ceil(totalrow/pageSizesp);
+            $("#pagingsp").twbsPagination({
+            totalPages: totalgages,
+            visiblePages: 5,
+            onPageClick: function (event, page) {
+                pageIndexsp = page;
+                setTimeout(callback,200);
+            }
+        });
+    }
+    //LOAD DANH SÁCH HOA DON CHO
+    async function loadHDCHO(callback) {
+        try {
+            const data = await $.ajax({
+                url: "https://localhost:7095/api/HoaDon/GetAllHDCho",
+                type: "GET",
+                dataType: "json"
+            });
+            $(".tabs-box").empty();
+            for (let i = 0; i < data.length; i++) {
+                const item = data[i];
+                const itemID = item.id;
+                const index = i + 1;
+                $(".tabs-box").append(`
+                <li class="tab" onclick="gethdct('${itemID}')">
+                    <span value="${itemID}">
+                    <a>Hoá đơn ${index}</a>
+                    <a style="padding-left: 10px;" onclick="deleteHDCho('${itemID}')"><i class="fas fa-times"></i></a>
+                    </span>
+                </li>
+                `);
+            }
+            setTimeout(callback,50);
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    }
+     //THÊM HÓA ĐƠN CHỜ
+    function addHDCho() {
+        $.ajax({
+            url: `https://localhost:7095/api/HoaDon/Offline/${'@loginInfor.Id'}`,
+            type: "POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function(response) {
+                console.log(response);
+                toastr.success('Thêm thành công', "Success Alert", { timeOut: 300 });
+                loadHDCHO(function(){
+                     activeTab(1);
+                });
+            },
+            error: function(response) {
+                toastr.error('Thêm thất bại', "Error Alert", { timeOut: 300 });
+            }
+        });
+    }
+    //Xóa hóa đơn chờ
+    function deleteHDCho(idhd) {
+        var ans = confirm("Bạn có chắc chắn xóa Đơn Nháp này?");
+        if(ans){
+            $.ajax({
+            url: "https://localhost:7095/api/HoaDon/deleteHoaDon/"+idhd,
+            type: "DELETE",
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function(response) {
+                    $("#partialGioHang").empty();
+                    loadHDCHO(function(){
+                        activeTab(0);
+                     });
+                    loadsp();
+                    toastr.success('Xóa thành công', 'Success Alert', {timeOut : 300});
+                },
+            error: function(response) {
+                    toastr.error('Xóa thất bại', 'Error Alert', { timeOut: 300 });
+                }
+            });
+        }
+    }
+    //Thêm SP vào Hóa đơn
+    function addCTSP(idctsp,dongia){
+        var activeTab = $(".tabs-box .tab").filter(".active");
+        var elementValue = activeTab.find("span").attr("value");
+        var request = {IdHoaDon:elementValue, IdChiTietSanPham: idctsp, DonGia: dongia,SoLuong:1}
+        $.ajax({
+            url: "/BanHangTaiQuay/addHdct",
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            data:request,
+            success: function(response) {
+                if(response.success == true){
+                    toastr.success('Thêm thành công', "Success Alert", {timeOut : 300});
+                    gethdct(request.IdHoaDon);
+                    loadCTSPByID();
+                }else{
+                    toastr.error('Thêm thất bại', 'Error Alert', { timeOut: 300 });
+                }
+            },
+            error: function(response) {
+                toastr.error('Thêm thất bại', 'Error Alert', { timeOut: 300 });
+            }
+        });
+    }
+    //CHI TIET HOA DON
+    //LAY HOA DON CHI TIET THEO IDHOADON
+
+    function gethdct(idhd){
+        $("#partialGioHang").load("/BanHangTaiQuay/getCTHD/" + idhd);
+    }
+
+    //Xóa HDCT
+    function deleteHDCT(idcthd,idhd){
+        $.ajax({
+            url: "/BanHangTaiQuay/deleteHdct/"+idcthd,
+            async: false,
+            type: 'DELETE',
+            dataType: 'json',
+            success: function(response) {
+                gethdct(idhd)
+            },
+            error: function(response) {
+                alert("Xóa thất bại");
+            }
+        });
+    }
+    
+    //Mở chi tiết sản phẩm
+    function showSPDetail(idsp){
+        $("#sanphambody").load("/BanHangTaiQuay/ShowSPDetail/"+idsp);
+         $("#sanpham").modal("show");
+    }
+
+    //Thanh toán chuyển trạng thái
+    function thanhToan(id){
+        var pttt = $('input[name="pttt"]:checked').val();
+        var ttien = $("#khachCanTra").text();
+        var thuevat =$("#thueVAT").val();
+        var tichdiemhd = $("#diemtichhd").text();
+        var tichdiemsd = parseInt($('#diemKHSD').val());
+        var request={Id: id, PTTT: pttt,IdNhanVien:'@loginInfor.Id', IdVoucher: null,TongTien: ttien, ThueVAT: thuevat, DiemTichHD: tichdiemhd, DiemSD: tichdiemsd};
+        $.ajax({
+              url: "/BanHangTaiQuay/ThanhToan",
+              async: false,
+              type: 'POST',
+              dataType: 'json',
+              data:request,
+              success: function(response) {
+                  $("#thanhtoan").modal("hide");
+                  $("#partialGioHang").empty();
+                  toastr.success('Thanh toán thành công', "Success Alert", {timeOut : 300});
+                  loadHDCHO(function(){
+                     activeTab(0);
+                  });
+              },
+              error: function(response) {
+                  toastr.error('Thanh toán thất bại', 'Error Alert', { timeOut: 300 });
+              }
+        });
+    }
+    //Chuyển trang quản lý hóa đơn
+    $("#hoadon-tab").on("click", function() {
+        $.ajax({
+            url: "/BanHangTaiQuay/QuanLyHD",
+            method:"GET",
+           success: function(result) {
+            $('.dshoadon').html(result);
+           },
+        })
+    });
+
+</script>

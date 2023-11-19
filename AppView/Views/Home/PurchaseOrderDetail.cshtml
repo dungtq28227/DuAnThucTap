@@ -1,0 +1,220 @@
+﻿@using AppData.ViewModels;
+@model List<DonMuaChiTietViewModel>
+@{
+    Layout = "_Layout";
+    int tongtien = 0;
+    int giaSP = 0;
+    int tienShip = 0;
+    int giaTri = 0;
+    int hinhThucGiamGia = 1;
+    int diem = 0;
+    int trangThaiLichSuTichDiem = 1;
+    int tileTieuDiem = 0;
+}
+<style>
+    #navbar {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: 10px 0px 10px 0px;
+        background-color: white;
+        margin-bottom: 24px;
+    }
+
+    #AllHoaDon {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        background-color: white;
+    }
+
+    #navbar div label {
+        margin: 0px;
+    }
+
+        #navbar div label span {
+            cursor: pointer;
+            padding: 10px;
+        }
+
+    #navbar input[type="radio"] {
+        display: none;
+    }
+
+    #navbar label input[type="radio"]:checked ~ span {
+        border-bottom: 1px solid black;
+    }
+
+    .table td{
+        vertical-align:middle;
+    }
+</style>
+<section style="background-color: #eee;">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Đơn mua chi tiết</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            
+        </div>
+        @*<div id="AllHoaDon">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Sản phẩm</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Đơn giá</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <th scope="row">@item.Ten</th>
+                            <td>@item.SoLuong</td>
+                            <td>@item.DonGia</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>*@
+        <div class="shopping__cart__table">
+            <table class="table" style="background-color:white;margin-bottom:0px">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="product__cart__item">
+                                <div class="product__cart__item__pic">
+                                    <img style="width:90px;height:90px;" src="/img/product/@item.DuongDan" alt="">
+                                </div>
+                                <div class="product__cart__item__text">
+                                    <h6>@item.TenSanPham</h6>
+                                    <h5>@item.TenKichCo/@item.TenMau</h5>
+                                </div>
+                            </td>
+                            <td class="cart__price">@item.DonGia.ToString("n0") VNĐ</td>
+                            <td class="cart__price">@item.SoLuong</td>
+                            <td class="cart__price">@((item.DonGia * item.SoLuong).ToString("n0")) VNĐ</td>
+                            @if (item.TrangThaiGiaoHang == 6 && item.TrangThaiDanhGia == 0)
+                            {
+                                <td class="cart__price">
+                                    <div style="border: none; border-radius: 10px; color: white; background-color: black; text-align:center;">
+                                        <a style="color:white;" asp-controller="Home" asp-action="ReviewProducts" asp-route-idCTHD="@item.IDCTHD" >Đánh giá sản phẩm</a>
+                                    </div>
+                                    
+                                </td>
+                            }
+                            @{
+                                giaSP += item.DonGia * item.SoLuong;
+                                tienShip = item.TienShip;
+                                giaTri = item.GiaTri;
+                                diem = item.Diem;
+                                trangThaiLichSuTichDiem = item.TrangThaiLichSuTichDiem;
+                                hinhThucGiamGia = item.HinhThucGiamGia;
+                                tileTieuDiem = item.TiLeTieuDiem;
+                            }
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <table style="background-color:white;">
+                        <tbody>
+                            @{
+                                if (hinhThucGiamGia == 0)
+                                {
+                                    if (trangThaiLichSuTichDiem == 0)
+                                    {
+                                        tongtien = giaSP * (100 - giaTri / 100) + tienShip - diem * tileTieuDiem;
+                                    }else
+                                    {
+                                        tongtien = giaSP * (100 - giaTri / 100) + tienShip;
+                                    }
+
+                                }else if (hinhThucGiamGia == 1)
+                                {
+                                    if (trangThaiLichSuTichDiem == 0)
+                                    {
+                                        tongtien = giaSP - giaTri + tienShip - diem * tileTieuDiem;
+                                    }
+                                    else
+                                    {
+                                        tongtien = giaSP - giaTri + tienShip;
+                                    }
+                                }else
+                                {
+                                    tongtien = giaSP + tienShip;
+                                }
+                                int diemtich = diem * tileTieuDiem;
+
+                            }
+                            <tr>
+                                <td style="padding-left: 20px;color: #111111;font-size: 18px;font-weight: 700;width: 70%;">
+                                    Giá sản phẩm
+                                </td>
+                                <td style="padding-left: 20px;color: #111111;font-size: 18px;font-weight: 700;width: 130px;padding-right: 70px; text-align: right;">@giaSP.ToString("n0") VNĐ</td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 20px;color: #111111;font-size: 18px;font-weight: 700;">
+                                    Phí vận chuyển
+                                </td>
+                                <td style="padding-left: 20px;color: #111111;font-size: 18px;font-weight: 700;width: 130px;padding-right: 70px; text-align: right;">@tienShip.ToString("n0") VNĐ</td>
+                            </tr>
+                            @if (hinhThucGiamGia == 0)
+                            {
+                                <tr>
+                                    <td style="padding-left: 20px;color: #111111;font-size: 18px;font-weight: 700;">
+                                        Voucher
+                                    </td>
+                                    <td style="padding-left: 20px;color: #111111;font-size: 18px;font-weight: 700;width: 130px;padding-right: 70px; text-align: right;">-@giaTri%</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td style="padding-left: 20px;color: #111111;font-size: 18px;font-weight: 700;">
+                                        Voucher
+                                    </td>
+                                    <td style="padding-left: 20px;color: #111111;font-size: 18px;font-weight: 700;width: 130px;padding-right: 70px; text-align: right;">- @giaTri.ToString("n0") VNĐ</td>
+                                </tr>
+                            }
+                            @if (trangThaiLichSuTichDiem == 0)
+                            {
+                                <tr>
+                                    <td style="padding-left: 20px;color: #111111;font-size: 18px;font-weight: 700;">
+                                        Điểm
+                                    </td>
+                                    <td style="padding-left: 20px;color: #111111;font-size: 18px;font-weight: 700;width: 130px;padding-right: 70px; text-align: right;">- @diemtich.ToString("n0") VNĐ</td>
+                                </tr>
+                            }
+                            
+                            <tr>
+                                <td style="padding-left: 20px;color: #111111;font-size: 18px;font-weight: 700;">
+                                    Tổng tiền
+                                </td>
+                                <td style="padding-left: 20px;color: #111111;font-size: 18px;font-weight: 700;width: 130px;padding-right: 70px; text-align: right;">@tongtien.ToString("n0") VNĐ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</section>
+@*@Html.PartialAsync("ReviewProduct")*@

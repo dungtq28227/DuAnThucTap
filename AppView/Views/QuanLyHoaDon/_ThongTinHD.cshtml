@@ -1,0 +1,160 @@
+﻿@using AppData.Models
+@model AppData.ViewModels.BanOffline.ChiTietHoaDonQL
+
+@{
+
+}
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#thongtin" type="button" role="tab" aria-controls="home" aria-selected="true">Thông tin</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#lstt" type="button" role="tab" aria-selected="false" tabindex="-1">Lịch sử thanh toán</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#lstd" type="button" role="tab" aria-selected="false" tabindex="-1">Lịch sử tích điểm</button>
+    </li>
+</ul>
+<div class="tab-content pt-2" id="myTabjustifiedContent">
+    <!--Thông tin-->
+    <div class="tab-pane fade p-3 show active" id="thongtin" role="tabpanel" aria-labelledby="home-tab">
+        <div class="row row-padding-15 row-flex">
+            <div class="col-lg-4 col-sm-12">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label">Mã hóa đơn:</label>
+                    <div class="col-sm-7">
+                        <label class="col-form-label"><strong>@Model.MaHD</strong></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-5 col-form-label">Ngày tạo:</label>
+                    <div class="col-sm-7">
+                        <label class="col-form-label">@Model.NgayTao</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-5 col-form-label">Ngày thanh toán:</label>
+                    <div class="col-sm-7">
+                        <label class="col-form-label">@Model.NgayThanhToan</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-12">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label">Trạng thái:</label>
+                    <div class="col-sm-7">
+                        <label class="col-form-label">@Model.TrangThai</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-5 col-form-label">Người bán:</label>
+                    <div class="col-sm-7">
+                        <label class="col-form-label">@Model.NhanVien</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-12">
+                <div class="form-group">
+                    <label class="form-label control-label">Ghi chú:</label>
+                    <div class="col-sm-12">
+                        <textarea class="form-control" style="height: 80px"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Chi tiết hóa đơn-->
+        <div class="d-flex mt-2">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Mã hàng</th>
+                        <th scope="col">Mặt hàng</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Đơn giá</th>
+                        <th scope="col">Giá bán</th>
+                        <th scope="col">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.listsp)
+                    {
+                        <tr>
+                            <th scope="row">@item.Id</th>
+                            <td>@item.Ten</td>
+                            <td class="text-end">@item.SoLuong</td>
+                            <td class="text-end">@item.GiaKM.ToString("n0")</td>
+                            <td class="text-end">@item.GiaLuu?.ToString("n0")</td>
+                            @{
+                                var tt = item.SoLuong * item.GiaLuu;
+                                <td class="text-end"><b>@tt?.ToString("n0")</b></td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!--Thanh Toán-->
+        <div class="d-flex">
+            <div class="d-flex flex-column ms-auto" style="width:35%">
+                <div class="row  text-end">
+                    <label class="col-sm-6 col-form-label">Tổng số lượng:</label>
+                    <div class="col-sm-6">
+                        <label class="col-sm-5 col-form-label">@Model.listsp.Sum(c=>c.SoLuong)</label>
+                    </div>
+                </div>
+                <div class="row  text-end">
+                    <label class="col-sm-6 col-form-label">Tổng tiền hàng:</label>
+                    <div class="col-sm-6">
+                        <label class="col-sm-5 col-form-label">@Model.listsp.Sum(c=>c.SoLuong * c.GiaLuu)?.ToString("n0")</label>
+                    </div>
+                </div>
+                <div class="row  text-end">
+                    <label class="col-sm-6 col-form-label">Giảm giá hóa đơn:</label>
+                    <div class="col-sm-6">
+                        <label class="col-sm-5 col-form-label"></label>
+                    </div>
+                </div>
+                <div class="row text-end">
+                    <label class="col-sm-6 col-form-label">Thuế VAT:</label>
+                    <div class="col-sm-6">
+                        <label class="col-sm-5 col-form-label">@Model.ThueVAT?.ToString("n0")</label>
+                    </div>
+                </div>
+                <div class="row text-end">
+                    <label class="col-sm-6 col-form-label">Khách cần trả:</label>
+                    <div class="col-sm-6 ">
+                        <label class="col-sm-5 col-form-label"><b>@Model.TienKhachTra?.ToString("n0")</b></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Lịch sử giao dịch-->
+    <div class="tab-pane fade" id="lstt" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="d-flex mt-2">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Mã giao dịch</th>
+                        <th scope="col">Thời gian</th>
+                        <th scope="col">Giá trị</th>
+                        <th scope="col">Phương thức</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col">Đã thu/chi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">5</th>
+                        <td>Raheem Lehner</td>
+                        <td>Dynamic Division Officer</td>
+                        <td>47</td>
+                        <td>2011-04-19</td>
+                        <td><b>2011-04-19</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

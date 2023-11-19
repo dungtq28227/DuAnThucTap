@@ -1,0 +1,168 @@
+﻿@using AppData.ViewModels;
+@model List<DonMuaViewModel>
+@{
+    Layout = "_Layout";
+}
+<style>
+    #navbar {
+        display:flex;
+        justify-content: space-evenly;
+        align-items:center;
+        padding: 10px 0px 10px 0px;
+        background-color:white;
+        margin-bottom:24px;
+    }
+
+    #AllHoaDon{
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        background-color: white;
+    }
+    #navbar div label {
+        margin:0px;
+    }
+
+    #navbar div label span{
+        cursor: pointer;
+        padding:10px;
+    }
+    #navbar input[type="radio"]{
+        display:none;
+    }
+
+    #navbar label input[type="radio"]:checked ~ span{
+        border-bottom: 1px solid black;
+    }
+</style>
+<section style="background-color: #eee;">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Đơn mua</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div onchange="FilterHoaDon()" id="navbar">
+                    <div >
+                        <label>
+                            <input type="radio" name="menu" value="0" checked/>
+                            <span>Tất cả</span>
+                        </label>
+                    </div>
+                    <div >
+                        <label>
+                            <input type="radio" name="menu" value="2" />
+                            <span>Chờ bàn giao</span>
+                        </label>
+                    </div>
+                    <div >
+                        <label>
+                            <input type="radio" name="menu" value="3" />
+                            <span>Đang giao</span>
+                        </label>
+                    </div>
+                    <div >
+                        <label>
+                            <input type="radio" name="menu" value="6" />
+                            <span>Hoàn thành</span>
+                        </label>
+                    </div>
+                    <div >
+                        <label>
+                            <input type="radio" name="menu" value="7"/>
+                            <span>Đã hủy</span>
+                        </label>
+                    </div>
+                    <div >
+                        <label>
+                            <input type="radio" name="menu" value="5"/>
+                            <span>Trả hàng hoàn tiền</span>
+                        </label>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div id="AllHoaDon" style="display:inherit;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Mã đơn hàng</th>
+                        <th scope="col">Ngày Đặt</th>
+                        <th scope="col">Thành tiền</th>
+                        <th scope="col">Trạng thái giao hàng</th>
+                        <th scope="col">Điểm tích</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <th scope="row"><a asp-controller="Home" asp-action="PurchaseOrderDetail" asp-route-idHoaDon="@item.IDHoaDon">@item.IDHoaDon.ToString().Substring(0,8)</a></th>
+                            <td>@item.NgayTao</td>
+                            <td>@item.TongTien.ToString("n0") VNĐ</td>
+                            @if (item.TrangThaiGiaoHang == 2)
+                            {
+                                <td>Chờ xác nhận</td>
+                            }
+                            else if (item.TrangThaiGiaoHang == 3)
+                            {
+                                <td>Đang giao</td>
+                            }
+                            else if (item.TrangThaiGiaoHang == 6)
+                            {
+                                <td>Giao hàng thành công</td>
+                            }
+                            else if (item.TrangThaiGiaoHang == 7)
+                            {
+                                <td>Đơn hủy</td>
+                            }else
+                            {
+                                <td>Chờ xác nhận</td>
+                            }
+                            @if (item.TrangThaiLSTD == 1)
+                            {
+                                <td>@item.Diem</td>
+                            }else{
+                                <td>Người dùng sử dụng điểm</td>
+                            }
+                            
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<script>
+    function FilterHoaDon(){
+        var x = document.querySelector('input[name="menu"]:checked').value;
+        var data = {
+            TrangThaiGiaoHang: x
+        }
+            fetch("/Home/GetHoaDonByTrangThai", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        }).then(function (reponse) {
+            if (reponse.ok) {
+                return reponse.text();
+            } else {
+                throw new Error("Error sending data to controller");
+            }
+        }).then(function (result) {
+            $("#AllHoaDon").html(result);
+        }).catch(function (error) {
+            console.log("An error occured", error)
+        })
+    }
+</script>

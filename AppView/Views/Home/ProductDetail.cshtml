@@ -1,0 +1,400 @@
+﻿@using AppData.ViewModels;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@model AppData.ViewModels.SanPham.ChiTietSanPhamViewModelHome
+@{
+    Layout = "_Layout";
+    var ListDanhGia = ViewData["ListDanhGia"] as PagedList<DanhGiaViewModel>;
+}
+<link href="~/css/productdetail.css" rel="stylesheet" type="text/css" />
+<style>
+    .icon-hover:hover {
+        border-color: #3b71ca !important;
+        background-color: white !important;
+        color: #3b71ca !important;
+    }
+
+    .icon-hover:hover i {
+        color: #3b71ca !important;
+    }
+    #filter-color input[type="radio"], #filter-size input[type="radio"], #LoaiSpFilter input[type="radio"], #filter-material input[type="radio"] {
+        display: none;
+    }
+
+    #filter-color label input[type="radio"]:checked ~ span, #filter-size label input[type="radio"]:checked ~ span, #LoaiSpFilter label input[type="radio"]:checked ~ span, #filter-material label input[type="radio"]:checked ~ span {
+        background: black;
+        color: #e5e5e5;
+    }
+
+    #filter-color label span, #filter-size label span, #filter-material label span, #LoaiSpFilter label span {
+        color: #111111;
+        font-size: 15px;
+        font-weight: 700;
+        text-transform: uppercase;
+        display: inline-block;
+        border: 1px solid #e5e5e5;
+        padding: 6px 25px;
+        margin-bottom: 10px;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+    #tronMau label {
+        left: -3px;
+        top: -3px;
+        height: 36px;
+        width: 36px;
+        border: 1px solid #e5e5e5;
+        content: "";
+        border-radius: 30%;
+        border: 2px solid black;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+    }
+
+    #tronMau svg {
+        visibility: hidden
+    }
+
+    #tronMau input[type="radio"]:checked ~ label svg {
+        visibility: visible
+    }
+
+    #filter-color label span:hover, #filter-size label span:hover, #filter-material label span:hover, #LoaiSpFilter label span:hover {
+        background: black;
+        color: white;
+    }
+
+    .MoTa, .DanhGia{
+        background-color:white;
+        margin-top: 15px;
+        padding:10px;
+    }
+</style>
+<div class="container mt-5 mb-5">
+    <div class="card">
+        <div class="row g-0">
+            <div class="col-md-6 border-end">
+                <div class="d-flex flex-column justify-content-center">
+                    <div class="main_image">
+                        <img src="" id="main_product_image" width="350">
+                    </div>
+                    <div class="thumbnail_images">
+                        <ul id="thumbnail">
+                            @foreach (var x in Model.Anhs)
+                            {
+                                <li><img onclick="changeImage(this)" src="~/img/product/@x.DuongDan" width="70"></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 right-side">
+                    <div class="d-flex justify-content-between align-items-center">
+                        Tên: <strong>@Model.Ten</strong>
+                        Mã: <strong id="maSP">@Model.ChiTietSanPhams.First(x=>x.TrangThai==1).ID</strong>
+                    </div>
+                    <h3>@Model.ChiTietSanPhams.First(x=>x.TrangThai==1).GiaBan.ToString("n0") VNĐ</h3>
+                    <div class="ratings d-flex flex-row align-items-center">
+                        <div class="d-flex flex-row">
+                            <i class='bx bxs-star'></i>
+                            <i class='bx bxs-star'></i>
+                            <i class='bx bxs-star'></i>
+                            <i class='bx bxs-star'></i>
+                            <i class='bx bx-star'></i>
+                        </div>
+                        <span>441 reviews</span>
+                    </div>
+                    <div class="mt-5">
+                        <span class="fw-bold">Màu Sắc</span>
+                        <div class="colors" id="filter-color">                            
+                                @foreach (var item in Model.MauSacs)
+                                {
+                                <label id="tronMau">
+                                    <input type="radio" class="btn-check" id="btn-check-outlined_@item.Ma" autocomplete="off" value="@item.ID" name="color" onclick="getMauSac(this)"/>
+                                    <label for="btn-check-outlined_@item.Ma" style="background-color:@item.Ma;border:white 1px solid;cursor:pointer" id="label_@item.ID">
+                                    </label>
+                                </label>
+                                }
+                            
+                        </div>
+                    </div>
+                    <div class="mt-5">
+                        <span class="fw-bold">Kích cỡ</span>
+                        <div class="colors">
+                            <ul id="sizes" style="height:35px">
+                                @foreach (var item in Model.KichCos)
+                                {
+                                    <li style="width:70px;height:100%"><input type="button" value="@item.Ten" class="btn btn-light" style="border:1px solid gray!important;width:100%;height:100%" id="@item.Ten" onclick="getKichCo(this)" /></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="buttons d-flex flex-row mt-5 gap-3">
+                        <button onclick="buyNow()" class="btn btn-outline-dark">Buy Now</button>
+                        <button onclick="addCart()" class="btn btn-dark">Add to Basket</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*ssss*@
+    
+    <section class="bg-light border-top py-4">
+        <div class="container">
+            <div class="row gx-4">
+                <div class="col-lg-8 mb-4">
+                    <div class="border rounded-2 px-3 py-2 bg-white">
+                        <!-- Pills navs -->
+                        <h3>MÔ TẢ SẢN PHẨM</h3>
+                        <!-- Pills navs -->
+                        <!-- Pills content -->
+                        <div class="tab-content" id="ex1-content">
+                            <div class="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+                                <p>
+                                    @Model.MoTa
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Pills content -->
+                    </div>
+                    <div class="border rounded-2 px-3 py-2 bg-white" style="margin-top:24px">
+                        <!-- Pills navs -->
+                        <h3>ĐÁNH GIÁ SẢN PHẨM</h3>
+                        <div class="container" style="border-top:1px solid;">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-6 text-center">
+                                            <h3 class="text-warning mt-4 mb-4">
+                                                @if (Model.SoSao.ToString() == "NaN")
+                                                {
+                                                    <b><span id="average_rating">0</span> / 5</b>
+                                                }else
+                                                {
+                                                    <b><span id="average_rating">@Model.SoSao</span> / 5</b>
+                                                }
+                                                
+                                            </h3>
+                                            <div class="mb-3">
+                                                @{
+
+                                                    for (int i = 0; i < Model.SoSao; i++)
+                                                    {
+                                                        <i class="fas fa-star text-warning"></i>
+                                                        
+                                                    }
+                                                    if (Model.SoSao < 5)
+                                                    {
+                                                        for (int i = 4; i > 5-Convert.ToInt32(Model.SoSao); i--)
+                                                        {
+                                                            <i class="fas fa-star star-light mr-1 main_star"></i>
+                                                        }
+                                                    }
+                                                    if (Model.SoSao.ToString() == "NaN")
+                                                    {
+                                                        for (int i = 0; i < 5; i++)
+                                                        {
+                                                            <i class="fas fa-star star-light mr-1 main_star"></i>
+                                                        }
+                                                    }
+                                                }
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="col-sm-6 text-center" style="display: flex; align-items: center; justify-content: center;">
+                                            <h3><span id="total_review">@Model.SoDanhGia</span> Đánh giá</h3>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="mt-5" id="review_content"></div>
+                        </div>
+                        @{
+                            foreach (var item in Model.LSTDanhGia)
+                            {
+                                <div class="container" style="border-top:1px solid #dee2e6;padding-top:15px;">
+                                    <div class="row" style="border-bottom:1px solid #dee2e6;padding-bottom:20px;padding-top:20px;">
+                                        <div class="col-2">
+                                            <h4 style="text-align: center; width: 60px; height: 60px; vertical-align: middle; background-color: gray; border-radius: 50%; display: table-cell;">@item.TenKH.Substring(0,1).ToUpper()</h4>
+                                        </div>
+                                        <div class="col-10">
+                                            <div>
+                                                <span>@item.TenKH</span>
+                                            </div>
+                                            <div>
+                                                @{
+                                                    for (int i = 0; i < item.Sao; i++)
+                                                    {
+                                                        <i class="fas fa-star text-warning"></i>
+
+                                                    }
+                                                    if (Model.SoSao < 5)
+                                                    {
+                                                        for (int i = 4; i > 5 - item.Sao; i--)
+                                                        {
+                                                            <i class="fas fa-star star-light mr-1 main_star"></i>
+                                                        }
+                                                    }
+
+                                                }
+                                            </div>
+                                            <div style="margin-top:6px;">
+                                                <span style="color:gray">@item.NgayDanhGia</span>
+                                            </div>
+                                            <div style="margin-top:6px;">
+                                                <span style="color:gray">Chất liệu: </span>@item.ChatLieu
+                                            </div>
+                                            <div style="margin-top:6px;">
+                                                <span style="color:gray">Màu sắc: </span>@item.MauSac
+                                            </div>
+                                            <div style="margin-top:6px;">
+                                                <span style="color:gray">Kích cỡ: </span>@item.KichCo
+                                            </div>
+                                            <div style="margin-top:6px;">
+                                                <span>@item.BinhLuan</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="product__pagination">
+                                <a class="active">
+                                    @Html.PagedListPager(ListDanhGia,page=>Url.Action("ProductDetail",new {pages=page}))
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="rateYo"></div>
+
+                <div class="col-lg-4">
+                    <div class="px-0 border rounded-2 shadow-0">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">SẢN PHẨM TƯƠNG TỰ</h5>
+                                @{
+                                    foreach (var item in Model.LSTSPTuongTu)
+                                    {
+                                        <div class="d-flex mb-3">
+                                            <a asp-action="ProductDetail" asp-route-idSanPham="@item.IDSP" class="me-3">
+                                                <img src="~/img/product/@item.DuongDanSPTT" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
+                                            </a>
+                                            <div class="info">
+                                                <a href="#" class="nav-link mb-1">
+                                                    @item.TenSP <br />
+                                                </a>
+                                                <strong class="text-dark"> @item.GiaSPTT.ToString("n0") VNĐ</strong>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script src="~/js/jquery-3.3.1.min.js"></script>
+<script>
+    var anhs = @Html.Raw(Json.Serialize(Model.Anhs));
+    var chiTietSanPhams = @Html.Raw(Json.Serialize(Model.ChiTietSanPhams));
+    var mauSacs = @Html.Raw(Json.Serialize(Model.MauSacs));
+    var kichCos = @Html.Raw(Json.Serialize(Model.KichCos));
+    var color = "";
+    var size = "";
+    $(document).ready(function () {
+        var chiTietSanPham = chiTietSanPhams.find(x => x.trangThai == 1);
+        color = chiTietSanPham.idMauSac;
+        size = chiTietSanPham.idKichCo;
+        var anhMacDinh = anhs.find(x => x.idMauSac == color).duongDan;
+        document.getElementById("main_product_image").src = "/img/product/" + anhMacDinh;
+    });
+    function changeImage(element) {
+
+        var main_prodcut_image = document.getElementById('main_product_image');
+        main_prodcut_image.src = element.src;
+    }
+    function getMauSac(element) {
+        color = element.value;
+        var chiTietSP = chiTietSanPhams.find(x => x.idMauSac == element.value && x.idKichCo == size);
+        console.log(chiTietSP);
+        var anh = anhs.find(x => x.idMauSac == element.value);
+        var lstMauSacElement = document.getElementById("filter-color").children;
+        for (let i = 0; i < lstMauSacElement.length;i++){
+            if (lstMauSacElement[i].children[1].style.border = "1px black solid") {
+                lstMauSacElement[i].children[1].style.border = "1px white solid";
+            }
+        }
+        var label = document.getElementById("label_" + element.value);
+        label.style.border = "2px black solid";
+        document.getElementById("main_product_image").src = "/img/product/" + anh.duongDan;
+        document.getElementById("maSP").innerHTML = chiTietSP.id;
+    }
+    function getKichCo(element) {
+        size = kichCos.find(x=>x.ten==element.value).id;
+        var chiTietSP = chiTietSanPhams.find(x => x.idKichCo == size && x.idMauSac==color);
+        console.log(chiTietSP);
+        var lstKichCoElement = document.getElementById("sizes").children;
+        for (let i = 0; i < lstKichCoElement.length; i++) {
+            if (lstKichCoElement[i].children[0].style.border = "2px black solid") {
+                lstKichCoElement[i].children[0].style.border = "1px solid gray";
+            }
+        }
+        var ip = document.getElementById(element.value);
+        ip.style.border = "2px black solid";
+        document.getElementById("maSP").innerHTML = chiTietSP.id;
+    }
+    function addCart() {
+        $.ajax({
+            async: true,
+            type: 'POST',
+            dataType: "json",
+            data: { id: document.getElementById("maSP").innerHTML },
+            url: '/Home/AddToCart',
+            success: function (response) {
+                if (response.success == true) {
+                    toastr.success(response.message, 'Success Alert', { timeOut: 300 });
+                } else {
+                    toastr.error(response.message, 'Error Alert', { timeOut: 300 });
+                }
+            },
+            error: function (response) {
+                console.log(response);
+                toastr.error(response.message, 'Error Alert', { timeOut: 300 });
+            }
+        });
+    }
+    function buyNow() {
+        $.ajax({
+            async: true,
+            type: 'POST',
+            dataType: "json",
+            data: { id: document.getElementById("maSP").innerHTML },
+            url: '/Home/BuyNow',
+            success: function (response) {
+                if (response.success == true) {
+                    window.location = 'https://localhost:5001/Home/ShoppingCart';
+                } else {
+                    toastr.error(response.message, 'Error Alert', { timeOut: 300 });
+                }
+            },
+            error: function (response) {
+                console.log(response);
+                toastr.error(response.message, 'Error Alert', { timeOut: 300 });
+            }
+        });
+    }
+</script>

@@ -1,0 +1,121 @@
+﻿@using AppData.Models
+@model AppData.ViewModels.BanOffline.HoaDonThanhToanViewModel
+@{
+    // var lstPttt = ViewData["lstPttt"] as List<PhuongThucThanhToan>;
+}
+<div class="d-flex flex-column" style="height:100%">
+    <form class="row g-3 p-3 formthanhtoan">
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill text-start"><span id="nhanVien"></span>NV: @Model.NhanVien</div>
+            <div class="flex-fill text-end"><span id="ngay"></span>@Model.NgayThanhToan</div>
+        </div>
+        <hr />
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill"><label for="inputName5" class="form-label ">Mã HD: @Model.MaHD</label></div>
+        </div>
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill"><label for="inputName5" class="form-label">Khách hàng</label></div>
+            <div class="flex-fill text-end"> <span id="tenkh">@Model.KhachHang</span></div>
+        </div>
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill"><label class="form-label">Số lượng</label></div>
+            <div class="flex-fill text-end"> <span id="soLuong">@Model.TongSL</span></div>
+        </div>
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill"><label for="inputEmail5" class="form-label">Tổng tiền hàng</label></div>
+            <div class="flex-fill text-end"> <input id="tongTienHang" value="@Model.TongTien" hidden /><span>@Model.TongTien?.ToString("n0")</span></div>
+        </div>
+
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill"><label for="inputEmail5" class="form-label">Điểm của khách hàng: </label></div>
+            <div class="flex-fill text-end"><span id="diemtichkh">@Model.DiemKH</span></div>
+        </div>
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill"><label for="inputEmail5" class="form-label">Điểm sử dụng</label></div>
+            <div class="flex-fill text-end"><input type="number" id="diemKHSD" /></div>
+        </div>
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill"><label for="inputEmail5" class="form-label">Tiền trừ tích điểm: </label></div>
+            <div class="flex-fill text-end"><span id="tientrutichdiem"></span></div>
+        </div>
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill"><label for="inputEmail5" class="form-label">Khuyễn mãi voucher: </label></div>
+            <div class="flex-fill text-end"><span id="giatrivoucher"></span></div>
+        </div>
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill"><label for="inputEmail5" class="form-label">Tích điểm hóa đơn: </label></div>
+            <div class="flex-fill text-end"><span id="diemtichhd">@Model.DiemTichHD</span></div>
+        </div>
+
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill"><label for="inputEmail5" class="form-label">Thuế VAT( 10%)</label></div>
+            <div class="flex-fill text-end"><input id="thueVAT" value="@Model.ThueVAT" hidden /> <span>@Model.ThueVAT.ToString("n0")</span></div>
+        </div>
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill"><label for="inputEmail5" class="form-label">Khách cần trả</label></div>
+            <div class="flex-fill text-end">
+                <span id="khachCanTra"></span>
+            </div>
+        </div>
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill"><label for="inputState" class="form-label">Phương thức thanh toán </label></div>
+        </div>
+        <div class="d-flex flex-row lh-1">
+            <div class="flex-fill m-2">
+                <input class="form-check-input" type="radio" name="pttt" value="Tiền mặt" checked>
+                <label class="form-check-label" for="gridRadios1">
+                    Tiền mặt
+                </label>
+            </div>
+            <div class="flex-fill m-2">
+                <input class="form-check-input" type="radio" name="pttt" value="Chuyển khoản" checked>
+                <label class="form-check-label" for="gridRadios1">
+                    Chuyển khoản
+                </label>
+            </div>
+        </div>
+    </form>
+    <div class="d-flex flex-row lh-1">
+        <input type="text" name="search" id="voucher" placeholder="Nhập mã giảm giá">
+        <button type="button" title="Áp dụng" id="btn-voucher"></button>
+        <p id="validatevoucher"></p>
+    </div>
+
+
+    <div class="mt-auto text-danger" id="notification"></div>
+    <div class="d-flex flex-row mt-auto">
+        <button type="button" onclick="thanhToan('@Model.Id')" class="btn btn-primary fw-bold btn-block w-100" style="height:60px; font-size:24px">THANH TOÁN</button>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        var tongtien = parseInt('@Model.TongTien');
+        var vat = parseInt('@Model.ThueVAT');
+        $("#khachCanTra").text(tongtien+vat);
+        // Sử dụng điểm tích
+        $("#diemKHSD").keyup(function(){
+            var diem = parseInt($('#diemKHSD').val());
+            var diemkh = parseInt('@Model.DiemKH');
+            var tltieu = parseFloat('@ViewBag.tileTieu');
+            var soTienLamTron = Math.round(diem * tltieu);
+            var dinhDangTienTe = soTienLamTron.toLocaleString('vi-VN');
+            var tienTru = dinhDangTienTe*1000;
+            var tienkhachtra = tongtien + vat - tienTru;
+            if(isNaN(diem) || isNaN(diemkh) || isNaN(tltieu)){
+                $("#notification").text("Vui lòng nhập giá trị hợp lệ");
+                $("#tientrutichdiem").val("");
+            } else if(diem > diemkh) {
+                $("#notification").text("Điểm sử dụng phải nhỏ hơn điểm của khách hàng");
+                $("#tientrutichdiem").val("");
+            } else {
+                $("#notification").text("");
+                $("#tientrutichdiem").text(tienTru);
+                $("#khachCanTra").text(tienkhachtra.tolocalString());
+            }
+        });
+        // Sử dụng voucher
+        $("#btn-voucher").on("click", function() {
+            var voucher = $("#voucher").val();
+        });
+    })
+</script>

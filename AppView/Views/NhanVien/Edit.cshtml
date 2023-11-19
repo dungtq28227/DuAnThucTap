@@ -1,0 +1,98 @@
+﻿@model AppData.Models.NhanVien
+
+@{
+    Layout = "~/Views/Shared/_LayoutForAdmin.cshtml";
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/nv.css">
+    ViewData["Title"] = "Edit";
+    AppData.Models.AssignmentDBContext dBContext = new AppData.Models.AssignmentDBContext();
+}
+
+<h1 style="text-align: center"> <b>Chỉnh sửa thông tin cá nhân</b></h1>
+<hr />
+<div class="row" style="margin-left:200px; margin-right: 200px">
+    <div class="col-md-12">
+
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row g-2">
+                <div class="col-6 p-3">
+                    <div class="form-group">
+                        <label asp-for="ID" class="control-label"></label>
+                        <input asp-for="ID" class="form-control" readonly/>
+                        <span asp-validation-for="ID" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6 p-3">
+                    <div class="form-group">
+                        <label asp-for="Ten" class="control-label"></label>
+                        <input asp-for="Ten" class="form-control" />
+                        <span asp-validation-for="Ten" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6 p-3">
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6 p-3">
+                    <div class="form-group">
+                        <label asp-for="PassWord" class="control-label"></label>
+                        <input asp-for="PassWord" class="form-control" />
+                        <span asp-validation-for="PassWord" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6 p-3">
+                    <div class="form-group">
+                        <label asp-for="SDT" class="control-label"></label>
+                        <input asp-for="SDT" class="form-control" />
+                        <span asp-validation-for="SDT" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6 p-3">
+                    <div class="form-group">
+                        <label asp-for="DiaChi" class="control-label"></label>
+                        <input asp-for="DiaChi" class="form-control" />
+                        <span asp-validation-for="DiaChi" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6 p-3">
+                    <div class="form-group">
+                        <label asp-for="TrangThai" class="control-label"></label>
+                        <input asp-for="TrangThai" class="form-control" />
+                        <span asp-validation-for="TrangThai" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6 p-3">
+                    <div class="form-group">
+                        <label asp-for="IDVaiTro" class="control-label">Vai Tro</label>
+                        <select class="form-control" name="IDVaiTro">
+
+                            @foreach (var VaiTro in dBContext.VaiTros.ToList())
+                            {
+                                <option value="@VaiTro.ID">@VaiTro.Ten</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Show">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,19 @@
+﻿@using AppData.ViewModels;
+@using AppData.ViewModels.SanPham;
+@model List<SanPhamViewModel>
+
+@foreach (var item in Model)
+{
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="product__item">
+            <div class="product__item__pic set-bg">
+                <a asp-action="ProductDetail" asp-route-idSanPham="@item.ID"><img style="width:260px;height:265px;" src="/img/product/@item.Image"></a>
+            </div>
+            <div class="product__item__text">
+                <h6>@item.Ten</h6>
+                <a onclick="addCart('@item.IdChiTietSanPham')" class="add-cart">+ Thêm vào giỏ hàng</a>
+                <h5 style="color:red">@item.GiaBan.ToString("n0") VND</h5>
+            </div>
+        </div>
+    </div>
+}
